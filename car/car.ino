@@ -99,7 +99,7 @@ const int F_ENA = 4;  // Preto
 const int F_IN1 = 16; // Branco
 const int F_IN2 = 17; // Cinza
 const int F_IN3 = 18; // Roxo
-const int F_IN4 = 19; // Azul
+const int F_IN4 = 12; // Azul
 const int F_ENB = 23; // Verde
 
 const int B_ENA = 32; // Azul

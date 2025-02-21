@@ -25,7 +25,7 @@ with open(filename, "w") as file:
     try:
         while True:
             # Send START command after 10 seconds
-            if not command_sent and (time.time() - start_time >= 10):
+            if not command_sent and (time.time() - start_time >= 2):
                 print("Sending START command...")
                 ser.write(b"START\n")
                 command_sent = True
