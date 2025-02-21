@@ -2,7 +2,7 @@
 ## Makefile generated for component 'controle2slx'. 
 ## 
 ## Makefile     : controle2slx.mk
-## Generated on : Mon Feb 17 23:08:13 2025
+## Generated on : Thu Feb 20 22:29:04 2025
 ## Final product: $(RELATIVE_PATH_TO_ANCHOR)/controle2slx.elf
 ## Product type : executable
 ## 
@@ -18,17 +18,18 @@
 
 PRODUCT_NAME              = controle2slx
 MAKEFILE                  = controle2slx.mk
-MATLAB_ROOT               = C:/PROGRA~1/MATLAB/R2024b
-MATLAB_BIN                = C:/PROGRA~1/MATLAB/R2024b/bin
-MATLAB_ARCH_BIN           = $(MATLAB_BIN)/win64
-START_DIR                 = C:/Users/thiag/OneDrive/Documents/utfpr/UTFPR-Control-Systems-2-ELN78A
+MATLAB_ROOT               = /Applications/MATLAB_R2024b.app
+MATLAB_BIN                = /Applications/MATLAB_R2024b.app/bin
+MATLAB_ARCH_BIN           = $(MATLAB_BIN)/maca64
+START_DIR                 = /Users/thiagorbernardo/Documents/controle2/UTFPR-Control-Systems-2-ELN78A
 SOLVER                    = 
 SOLVER_OBJ                = 
 CLASSIC_INTERFACE         = 0
 TGT_FCN_LIB               = None
 MODEL_HAS_DYNAMICALLY_LOADED_SFCNS = 0
 RELATIVE_PATH_TO_ANCHOR   = ..
-SLIB_PATH                 = C:/Users/thiag/DOCUME~1/MATLAB/R2024b/ARDUIN~1/ESP32W~1/FASTER~2
+SLIB_PATH                 = /Users/thiagorbernardo/Documents/MATLAB/R2024b/ArduinoStaticLibrary/ESP32WROOMArduinoCompatible/FasterBuilds
+SSLIB_PATH                = /Users/thiagorbernardo/Documents/MATLAB/R2024b/ArduinoStaticLibrary/ESP32WROOMArduinoCompatible/FasterBuilds
 C_STANDARD_OPTS           = 
 CPP_STANDARD_OPTS         = 
 
@@ -66,7 +67,6 @@ CPP_STANDARD_OPTS         =
 # MACROS
 #-----------
 
-SHELL                    = %SystemRoot%/system32/cmd.exe
 PRODUCT_HEX              = $(RELATIVE_PATH_TO_ANCHOR)/$(PRODUCT_NAME).hex
 PRODUCT_BIN              = $(RELATIVE_PATH_TO_ANCHOR)/$(PRODUCT_NAME).bin
 PRODUCT_MAP              = $(RELATIVE_PATH_TO_ANCHOR)/$(PRODUCT_NAME).map
@@ -115,13 +115,13 @@ MEX_PATH = $(MATLAB_ARCH_BIN)
 MEX = "$(MEX_PATH)/mex"
 
 # Binary Converter: Binary Converter
-ESPTOOL = $(ARDUINO_ESP32_ROOT)/tools/esptool_py/$(ESP32_FLASHTOOL_VERSION)/esptool.exe
+ESPTOOL = $(ARDUINO_ESP32_ROOT)/tools/esptool_py/$(ESP32_FLASHTOOL_VERSION)/esptool
 
 # Partition Generator: Partition Generator
-GENPART = $(ARDUINO_ESP32_TOOLS)/gen_esp32part.exe
+GENPART = python3 $(ARDUINO_ESP32_TOOLS)/gen_esp32part.py
 
 # Create Bootloader Image: Create Bootloader Image
-ESPTOOL = $(ARDUINO_ESP32_ROOT)/tools/esptool_py/$(ESP32_FLASHTOOL_VERSION)/esptool.exe
+ESPTOOL = $(ARDUINO_ESP32_ROOT)/tools/esptool_py/$(ESP32_FLASHTOOL_VERSION)/esptool
 
 # Download: Download
 DOWNLOAD =
@@ -130,7 +130,7 @@ DOWNLOAD =
 EXECUTE = $(PRODUCT)
 
 # Builder: Make Tool
-MAKE_PATH = %MATLAB%\bin\win64
+MAKE_PATH = %MATLAB%/bin/maca64
 MAKE = "$(MAKE_PATH)/gmake"
 
 
@@ -211,7 +211,7 @@ BUILD_TYPE = "Top-Level Standalone Executable"
 ## INCLUDE PATHS
 ###########################################################################
 
-INCLUDES_BUILDINFO = -I$(START_DIR) -IC:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/include -I$(MATLAB_ROOT)/toolbox/target/shared/svd/common/include -IC:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/platform/inc -IC:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/inc -IC:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x -I$(START_DIR)/controle2slx_ert_rtw -I$(MATLAB_ROOT)/extern/include -I$(MATLAB_ROOT)/simulink/include -I$(MATLAB_ROOT)/rtw/c/src -I$(MATLAB_ROOT)/rtw/c/src/ext_mode/common -I$(MATLAB_ROOT)/rtw/c/ert -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/include -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/common -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/protocol/src -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/protocol/include -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/transport/include -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/transport/src -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/platform/include -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/platform/default -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/ext_mode/include -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/ext_mode/src -I$(MATLAB_ROOT)/toolbox/coder/rtiostream/src -I$(ARDUINO_ESP32_ROOT)/hardware/esp32/$(ESP32_LIB_VERSION)/cores/esp32 -I$(ARDUINO_ESP32_ROOT)/hardware/esp32/$(ESP32_LIB_VERSION)/variants/esp32 -I$(ARDUINO_ESP32_ROOT)/tools/esptool_py -I$(ARDUINO_ESP32_ROOT)/tools/mkspiffs -IC:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinotarget/include -IC:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinotarget/scheduler/include -IC:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/include -I$(START_DIR)/include -IC:/ProgramData/MATLAB/SupportPackages/R2024b/aCLI/data/packages/esp32/hardware/esp32/2.0.11/libraries/Wire/src -IC:/ProgramData/MATLAB/SupportPackages/R2024b/aCLI/data/packages/esp32/hardware/esp32/2.0.11/libraries/SPI/src -IC:/ProgramData/MATLAB/SupportPackages/R2024b/aCLI/user/libraries/ServoESP32/src
+INCLUDES_BUILDINFO = -I$(START_DIR) -I/Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/include -I$(MATLAB_ROOT)/toolbox/target/shared/svd/common/include -I/Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/platform/inc -I/Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/inc -I/Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x -I$(START_DIR)/controle2slx_ert_rtw -I$(MATLAB_ROOT)/extern/include -I$(MATLAB_ROOT)/simulink/include -I$(MATLAB_ROOT)/rtw/c/src -I$(MATLAB_ROOT)/rtw/c/src/ext_mode/common -I$(MATLAB_ROOT)/rtw/c/ert -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/include -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/common -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/protocol/src -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/protocol/include -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/transport/include -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/transport/src -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/platform/include -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/platform/default -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/ext_mode/include -I$(MATLAB_ROOT)/toolbox/coder/xcp/src/target/ext_mode/src -I$(MATLAB_ROOT)/toolbox/coder/rtiostream/src -I$(ARDUINO_ESP32_ROOT)/hardware/esp32/$(ESP32_LIB_VERSION)/cores/esp32 -I$(ARDUINO_ESP32_ROOT)/hardware/esp32/$(ESP32_LIB_VERSION)/variants/esp32 -I$(ARDUINO_ESP32_ROOT)/tools/esptool_py -I$(ARDUINO_ESP32_ROOT)/tools/mkspiffs -I/Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinotarget/include -I/Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinotarget/scheduler/include -I/Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/include -I$(START_DIR)/include -I/Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/3P.instrset/arduinoide.instrset/aCLI/data/packages/esp32/hardware/esp32/2.0.11/libraries/Wire/src -I/Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/3P.instrset/arduinoide.instrset/aCLI/data/packages/esp32/hardware/esp32/2.0.11/libraries/SPI/src -I/Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/3P.instrset/arduinoide.instrset/aCLI/user/libraries/ServoESP32/src
 
 INCLUDES = $(INCLUDES_BUILDINFO)
 
@@ -222,9 +222,9 @@ INCLUDES = $(INCLUDES_BUILDINFO)
 DEFINES_ = -DXCP_ADDRESS_GRANULARITY=XCP_ADDRESS_GRANULARITY_BYTE -DCODERTARGET_XCP_DAQ_PACKED_MODE -DCODERTARGET_XCP_MAX_CONTIGUOUS_SAMPLES=2 -D__MW_TARGET_USE_HARDWARE_RESOURCES_H__ -D_MW_ARDUINO_LOOP_=1 -DMW_ARDUINO_STEP_SIZE=100000 -DMW_ARDUINO_MICROS -DARDUINO_NUM_SERIAL_PORTS=3 -DARDUINO_SERIAL_RECEIVE_BUFFER_SIZE=256 -D_RTT_BAUDRATE_SERIAL0_=9600 -D_RTT_BAUDRATE_SERIAL1_=9600 -D_RTT_BAUDRATE_SERIAL2_=9600 -D_RTT_CONFIG_SERIAL0_=SERIAL_8N1 -D_RTT_CONFIG_SERIAL1_=SERIAL_8N1 -D_RTT_CONFIG_SERIAL2_=SERIAL_8N1 -D_RTT_TX_PIN_SERIAL0_=1 -D_RTT_RX_PIN_SERIAL0_=3 -D_RTT_TX_PIN_SERIAL1_=33 -D_RTT_RX_PIN_SERIAL1_=32 -D_RTT_TX_PIN_SERIAL2_=17 -D_RTT_RX_PIN_SERIAL2_=16 -D_RTT_ANALOG_REF_=0 -DMW_RTIO_SERIAL0 -DMW_NUM_PINS=26 -D_RTT_PWM_BLOCKS_ -DARDUINO_DEFAULT_PWM_FREQUENCY=1000 -D_RTT_I2C0_SDA_=21 -D_RTT_I2C0_SCL_=22 -D_ONBOARD_EEPROM_SIZE_=0
 DEFINES_BUILD_ARGS = -DCLASSIC_INTERFACE=0 -DALLOCATIONFCN=0 -DEXT_MODE=1 -DONESTEPFCN=1 -DTERMFCN=1 -DMULTI_INSTANCE_CODE=0 -DINTEGER_CODE=0 -DMT=0
 DEFINES_CUSTOM = 
-DEFINES_OPTS = -DXCP_DAQ_SUPPORT -DXCP_CALIBRATION_SUPPORT -DXCP_TIMESTAMP_SUPPORT -DXCP_TIMESTAMP_BASED_ON_SIMULATION_TIME -DXCP_SET_MTA_SUPPORT -DEXTMODE_XCP_TRIGGER_SUPPORT -DXCP_MEM_BLOCK_1_SIZE=32 -DXCP_MEM_BLOCK_1_NUMBER=1 -DXCP_MEM_BLOCK_2_SIZE=56 -DXCP_MEM_BLOCK_2_NUMBER=1 -DXCP_MEM_BLOCK_3_SIZE=64 -DXCP_MEM_BLOCK_3_NUMBER=1 -DXCP_MEM_RESERVED_POOLS_TOTAL_SIZE=487 -DXCP_MEM_RESERVED_POOLS_NUMBER=2 -DXCP_MEM_DAQ_RESERVED_POOL_BLOCKS_NUMBER=3 -DXCP_MEM_DAQ_RESERVED_POOLS_NUMBER=1 -DXCP_MIN_EVENT_NO_RESERVED_POOL=2 -DXCP_MAX_CTO_SIZE=32 -DXCP_MAX_DTO_SIZE=65532 -DXCP_MAX_ODT_ENTRY_SIZE=255 -DEXTMODE_STATIC -DEXTMODE_STATIC_SIZE=65536 -DON_TARGET_WAIT_FOR_START=1 -DTID01EQ=1
+DEFINES_OPTS = -DXCP_DAQ_SUPPORT -DXCP_CALIBRATION_SUPPORT -DXCP_TIMESTAMP_SUPPORT -DXCP_TIMESTAMP_BASED_ON_SIMULATION_TIME -DXCP_SET_MTA_SUPPORT -DEXTMODE_XCP_TRIGGER_SUPPORT -DXCP_MEM_BLOCK_1_SIZE=32 -DXCP_MEM_BLOCK_1_NUMBER=1 -DXCP_MEM_BLOCK_2_SIZE=56 -DXCP_MEM_BLOCK_2_NUMBER=1 -DXCP_MEM_BLOCK_3_SIZE=56 -DXCP_MEM_BLOCK_3_NUMBER=1 -DXCP_MEM_RESERVED_POOLS_TOTAL_SIZE=481 -DXCP_MEM_RESERVED_POOLS_NUMBER=2 -DXCP_MEM_DAQ_RESERVED_POOL_BLOCKS_NUMBER=3 -DXCP_MEM_DAQ_RESERVED_POOLS_NUMBER=1 -DXCP_MIN_EVENT_NO_RESERVED_POOL=1 -DXCP_MAX_CTO_SIZE=32 -DXCP_MAX_DTO_SIZE=65532 -DXCP_MAX_ODT_ENTRY_SIZE=255 -DEXTMODE_STATIC -DEXTMODE_STATIC_SIZE=65536 -DON_TARGET_WAIT_FOR_START=1 -DTID01EQ=0
 DEFINES_SKIPFORSIL = -DXCP_CUSTOM_PLATFORM -DEXIT_FAILURE=1 -DEXTMODE_DISABLEPRINTF -DEXTMODE_DISABLETESTING -DEXTMODE_DISABLE_ARGS_PROCESSING=1 -DINCLUDE_xTaskGetCurrentTaskHandle=1 -DOS_STKSIZE=8192 -DINCLUDE_vTaskDelete -DINCLUDE_vTaskDelay=1 -DUSE_FREERTOS -DSTACK_SIZE=64 -DRT
-DEFINES_STANDARD = -DMODEL=controle2slx -DNUMST=2 -DNCSTATES=2 -DHAVESTDIO -DMODEL_HAS_DYNAMICALLY_LOADED_SFCNS=0
+DEFINES_STANDARD = -DMODEL=controle2slx -DNUMST=1 -DNCSTATES=0 -DHAVESTDIO -DMODEL_HAS_DYNAMICALLY_LOADED_SFCNS=0
 
 DEFINES = $(DEFINES_) $(DEFINES_BUILD_ARGS) $(DEFINES_CUSTOM) $(DEFINES_OPTS) $(DEFINES_SKIPFORSIL) $(DEFINES_STANDARD)
 
@@ -232,7 +232,7 @@ DEFINES = $(DEFINES_) $(DEFINES_BUILD_ARGS) $(DEFINES_CUSTOM) $(DEFINES_OPTS) $(
 ## SOURCE FILES
 ###########################################################################
 
-SRCS = C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/MW_arduino_digitalio.cpp C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/MW_PWM.cpp C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/MW_PWMDriver.c C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/ArduinoPinHandleMap.cpp C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/MW_arduinoI2C.cpp C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/io_wrappers.cpp C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/platform/src/vl53l0x_platform.cpp C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/platform/src/vl53l0x_i2c_platform.cpp C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api_strings.cpp C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api_ranging.cpp C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api_calibration.cpp C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api.cpp C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api_core.cpp C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/vl53l0x_main.cpp $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/ext_mode/src/xcp_ext_mode.c $(START_DIR)/controle2slx_ert_rtw/controle2slx.c $(START_DIR)/controle2slx_ert_rtw/controle2slx_data.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/ext_mode/src/xcp_ext_common.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/ext_mode/src/xcp_ext_classic_trigger.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/protocol/src/xcp.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/protocol/src/xcp_standard.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/protocol/src/xcp_daq.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/protocol/src/xcp_calibration.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/transport/src/xcp_fifo.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/transport/src/xcp_transport.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/platform/default/xcp_mem_default.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/platform/default/xcp_drv_rtiostream.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/common/xcp_utils.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/transport/src/xcp_frame_serial.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/ext_mode/src/xcp_ext_param_default_serial.c C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinotarget/src/MW_ArduinoHWInit.cpp "$(ARDUINO_ESP32_ROOT)/hardware/esp32/$(ESP32_LIB_VERSION)/cores/esp32/IPAddress.cpp" "$(ARDUINO_ESP32_ROOT)/hardware/esp32/$(ESP32_LIB_VERSION)/cores/esp32/Print.cpp" C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/src/mw_freertos_init.c C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/src/mw_thread.c C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/src/mw_timer.c C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/src/mw_semaphore.c C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinotarget/src/platform_timer.cpp C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinotarget/src/rtiostream_serial_daemon.cpp
+SRCS = /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/MW_arduino_digitalio.cpp /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/MW_PWM.cpp /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/MW_PWMDriver.c /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/ArduinoPinHandleMap.cpp /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/MW_arduinoI2C.cpp /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/io_wrappers.cpp /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/platform/src/vl53l0x_platform.cpp /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/platform/src/vl53l0x_i2c_platform.cpp /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api_strings.cpp /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api_ranging.cpp /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api_calibration.cpp /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api.cpp /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api_core.cpp /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/vl53l0x_main.cpp $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/ext_mode/src/xcp_ext_mode.c $(START_DIR)/controle2slx_ert_rtw/controle2slx.c $(START_DIR)/controle2slx_ert_rtw/controle2slx_data.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/ext_mode/src/xcp_ext_common.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/ext_mode/src/xcp_ext_classic_trigger.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/protocol/src/xcp.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/protocol/src/xcp_standard.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/protocol/src/xcp_daq.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/protocol/src/xcp_calibration.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/transport/src/xcp_fifo.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/transport/src/xcp_transport.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/platform/default/xcp_mem_default.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/platform/default/xcp_drv_rtiostream.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/common/xcp_utils.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/server/transport/src/xcp_frame_serial.c $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/ext_mode/src/xcp_ext_param_default_serial.c /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinotarget/src/MW_ArduinoHWInit.cpp "$(ARDUINO_ESP32_ROOT)/hardware/esp32/$(ESP32_LIB_VERSION)/cores/esp32/IPAddress.cpp" "$(ARDUINO_ESP32_ROOT)/hardware/esp32/$(ESP32_LIB_VERSION)/cores/esp32/Print.cpp" /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/src/mw_freertos_init.c /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/src/mw_thread.c /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/src/mw_timer.c /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/src/mw_semaphore.c /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinotarget/src/platform_timer.cpp /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinotarget/src/rtiostream_serial_daemon.cpp
 
 MAIN_SRC = $(START_DIR)/controle2slx_ert_rtw/ert_main.c
 
@@ -258,7 +258,7 @@ PREBUILT_OBJS =
 ## LIBRARIES
 ###########################################################################
 
-LIBS = $(SLIB_PATH)/MW_RebuildSrc_Comm.o $(SLIB_PATH)/libcomm.a $(SLIB_PATH)/MW_RebuildSrc_Core.o $(SLIB_PATH)/libcore.a
+LIBS = $(SSLIB_PATH)/MW_RebuildSrc_Comm.o $(SSLIB_PATH)/libcomm.a $(SSLIB_PATH)/MW_RebuildSrc_Core.o $(SSLIB_PATH)/libcore.a
 
 ###########################################################################
 ## SYSTEM LIBRARIES
@@ -454,19 +454,19 @@ $(PRODUCT) : $(OBJS) $(PREBUILT_OBJS) $(LIBS) $(MAIN_OBJ)
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-%.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/%.c
+%.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/%.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-%.S.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/%.s
+%.S.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/%.s
 	$(AS) $(ASFLAGS) -o "$@" "$<"
 
 
-%.S.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/%.S
+%.S.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/%.S
 	$(AS) $(ASFLAGS) -o "$@" "$<"
 
 
-%.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/%.cpp
+%.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/%.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
@@ -614,59 +614,59 @@ $(PRODUCT) : $(OBJS) $(PREBUILT_OBJS) $(LIBS) $(MAIN_OBJ)
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-MW_arduino_digitalio.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/MW_arduino_digitalio.cpp
+MW_arduino_digitalio.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/MW_arduino_digitalio.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-MW_PWM.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/MW_PWM.cpp
+MW_PWM.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/MW_PWM.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-MW_PWMDriver.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/MW_PWMDriver.c
+MW_PWMDriver.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/MW_PWMDriver.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-ArduinoPinHandleMap.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/ArduinoPinHandleMap.cpp
+ArduinoPinHandleMap.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/ArduinoPinHandleMap.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-MW_arduinoI2C.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/MW_arduinoI2C.cpp
+MW_arduinoI2C.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/MW_arduinoI2C.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-io_wrappers.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/io_wrappers.cpp
+io_wrappers.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinobase/src/io_wrappers.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-vl53l0x_platform.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/platform/src/vl53l0x_platform.cpp
+vl53l0x_platform.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/platform/src/vl53l0x_platform.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-vl53l0x_i2c_platform.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/platform/src/vl53l0x_i2c_platform.cpp
+vl53l0x_i2c_platform.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/platform/src/vl53l0x_i2c_platform.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-vl53l0x_api_strings.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api_strings.cpp
+vl53l0x_api_strings.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api_strings.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-vl53l0x_api_ranging.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api_ranging.cpp
+vl53l0x_api_ranging.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api_ranging.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-vl53l0x_api_calibration.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api_calibration.cpp
+vl53l0x_api_calibration.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api_calibration.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-vl53l0x_api.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api.cpp
+vl53l0x_api.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-vl53l0x_api_core.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api_core.cpp
+vl53l0x_api_core.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/core/src/vl53l0x_api_core.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-vl53l0x_main.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/vl53l0x_main.cpp
+vl53l0x_main.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/matlab/hardware/shared/sensors/thirdparty/vl53l0x/vl53l0x_main.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
@@ -738,7 +738,7 @@ xcp_ext_param_default_serial.o : $(MATLAB_ROOT)/toolbox/coder/xcp/src/target/ext
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-MW_ArduinoHWInit.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinotarget/src/MW_ArduinoHWInit.cpp
+MW_ArduinoHWInit.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinotarget/src/MW_ArduinoHWInit.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
@@ -750,27 +750,27 @@ Print.o : $(ARDUINO_ESP32_ROOT)/hardware/esp32/$(ESP32_LIB_VERSION)/cores/esp32/
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-mw_freertos_init.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/src/mw_freertos_init.c
+mw_freertos_init.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/src/mw_freertos_init.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-mw_thread.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/src/mw_thread.c
+mw_thread.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/src/mw_thread.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-mw_timer.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/src/mw_timer.c
+mw_timer.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/src/mw_timer.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-mw_semaphore.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/src/mw_semaphore.c
+mw_semaphore.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/shared/freertos/src/mw_semaphore.c
 	$(CC) $(CFLAGS) -o "$@" "$<"
 
 
-platform_timer.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinotarget/src/platform_timer.cpp
+platform_timer.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinotarget/src/platform_timer.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
-rtiostream_serial_daemon.o : C:/ProgramData/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinotarget/src/rtiostream_serial_daemon.cpp
+rtiostream_serial_daemon.o : /Users/thiagorbernardo/Documents/MATLAB/SupportPackages/R2024b/toolbox/target/supportpackages/arduinotarget/src/rtiostream_serial_daemon.cpp
 	$(CPP) $(CPPFLAGS) -o "$@" "$<"
 
 
