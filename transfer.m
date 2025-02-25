@@ -2,6 +2,7 @@ A = csvread("train_data.csv");
 time = A(:,1);
 goal = A(:,2);
 distance = A(:,3);
+plot(time, [goal, distance], 'LineWidth', 2);
 
 figure;
 subplot(2,1,1);
