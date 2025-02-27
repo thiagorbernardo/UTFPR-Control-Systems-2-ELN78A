@@ -112,6 +112,8 @@ const int B_ENB = 14; // Marrom
 AxisController forwardAxis(F_ENA, F_IN1, F_IN2, F_IN3, F_IN4, F_ENB, 0, 1);
 AxisController backwardAxis(B_ENA, B_IN1, B_IN2, B_IN3, B_IN4, B_ENB, 0, 1);
 
+// comando começa em 20, recua ate 30, vai ate 8
+
 class LaserSensor
 {
 private:
@@ -150,14 +152,14 @@ public:
       // Convert from millimeters to centimeters for consistency with ultrasonic sensor
       float distanceCm = measure.RangeMilliMeter / 10.0;
 
-      Serial.print("Distance (cm): ");
-      Serial.println(distanceCm);
+      // Serial.print("Distance: ");
+      // Serial.println(distanceCm);
 
       return distanceCm;
     }
     else
     {
-      Serial.println("Out of range");
+      // Serial.println("Out of range");
       return -1;
     }
   }
@@ -166,6 +168,30 @@ public:
 LaserSensor laserSensor;
 
 float distance = 0;
+int speed = 220;
+
+enum State
+{
+  WAITING_TO_START,
+  STABILIZING_30,
+  STABILIZING_8,
+  STOPPED
+};
+
+State currentState = WAITING_TO_START;
+unsigned long stateStartTime = 0;
+unsigned long lastPrintTime = 0;
+const unsigned long PRINT_INTERVAL = 100;      // 0.1 seconds
+const unsigned long STABILIZE_30_DURATION = 6; // 4 seconds for each goal
+const unsigned long TOTAL_DURATION = 40;       // 40 seconds total
+
+float goalDistance = 30.0; // Starting goal is 30cm
+
+// Add this variable to track total runtime
+unsigned long experimentStartTime = 0;
+
+// Add this constant near the other constants
+const float TOLERANCE = 0.5; // ±0.5cm tolerance
 
 void setup()
 {
@@ -179,87 +205,116 @@ void setup()
       ;
   }
 
-  Serial.println("Waiting for command...");
-  Serial.println("Commands: 'W' (forward), 'S' (backward), 'A' (left), 'D' (right), 'X' (stop)");
+  // Serial.println("Waiting for command...");
+  // Serial.println("Commands: 'W' (forward), 'S' (backward), 'A' (left), 'D' (right), 'X' (stop)");
 }
+
+bool hasStarted = false;
+float stepTime = 0.0;
 
 void loop()
 {
-  // Continuously check distance if moving forward
-  static bool isMovingForward = false;
-  static int speed = 255;
+  unsigned long currentTime = millis();
+  distance = laserSensor.getDistance();
 
-  if (isMovingForward)
+  // Send data to the serial port every 0.1 seconds
+  if (currentTime - lastPrintTime >= PRINT_INTERVAL && currentState != STOPPED)
   {
-    distance = laserSensor.getDistance();
-    if (distance > 0 && distance <= 5)
-    {
-      Serial.println("Obstacle detected within 5cm, stopping");
-      forwardAxis.stop();
-      backwardAxis.stop();
-      isMovingForward = false;
-    }
+    Serial.print(stepTime);
+    Serial.print(",");
+    Serial.print(goalDistance);
+    Serial.print(",");
+    Serial.println(distance);
+    lastPrintTime = currentTime;
+    stepTime += 0.1;
   }
 
-  if (Serial.available() > 0)
+  if (Serial.available())
   {
-    char command = Serial.read();
-    command = toupper(command);
-
-    if (command == '\n' || command == '\r')
+    String command = Serial.readStringUntil('\n');
+    if (command.equals("START"))
     {
-      return;
+      hasStarted = true;
+      experimentStartTime = currentTime;
+      currentState = WAITING_TO_START;
+      stepTime = 0.0;
+      Serial.println("DISCARD_DATA");
     }
+    return;
+  }
 
-    switch (command)
+  if (!hasStarted)
+  {
+    return;
+  }
+
+  if (stepTime >= TOTAL_DURATION)
+  {
+    currentState = STOPPED;
+    forwardAxis.stop();
+    backwardAxis.stop();
+    Serial.println("STOP");
+    return;
+  }
+
+  switch (currentState)
+  {
+  case WAITING_TO_START:
+    currentState = STABILIZING_30;
+    stateStartTime = currentTime;
+    goalDistance = 30.0;
+    stepTime = 0.0;
+    break;
+
+  case STABILIZING_30:
+    if (stepTime >= STABILIZE_30_DURATION)
     {
-    case 'W':
-      distance = laserSensor.getDistance();
-      if (distance > 0 && distance <= 5)
+      currentState = STABILIZING_8;
+      stateStartTime = currentTime;
+      goalDistance = 8.0;
+    }
+    else
+    {
+      if (distance < goalDistance - TOLERANCE)
       {
-        Serial.println("Obstacle detected within 5cm, cannot move forward");
-        forwardAxis.stop();
-        backwardAxis.stop();
-        isMovingForward = false;
+        forwardAxis.moveBackward(speed);
+        backwardAxis.moveBackward(speed);
+      }
+      else if (distance > goalDistance + TOLERANCE)
+      {
+        forwardAxis.moveForward(speed);
+        backwardAxis.moveForward(speed);
       }
       else
       {
-        Serial.println("No obstacle detected, moving forward");
-        forwardAxis.moveForward(speed);
-        backwardAxis.moveForward(speed);
-        isMovingForward = true;
+        forwardAxis.stop();
+        backwardAxis.stop();
       }
-      break;
-    case 'S':
-      Serial.println("Moving backward");
+    }
+    break;
+
+  case STABILIZING_8:
+    if (distance < goalDistance - TOLERANCE)
+    {
       forwardAxis.moveBackward(speed);
       backwardAxis.moveBackward(speed);
-      isMovingForward = false;
-      break;
-    case 'A':
-      Serial.println("Moving left");
-      forwardAxis.moveLeft(speed);
-      backwardAxis.moveLeft(speed);
-      isMovingForward = false;
-      break;
-    case 'D':
-      Serial.println("Moving right");
-      forwardAxis.moveRight(speed);
-      backwardAxis.moveRight(speed);
-      isMovingForward = false;
-      break;
-    case 'X':
-      Serial.println("Stopping");
-      forwardAxis.stop();
-      backwardAxis.stop();
-      isMovingForward = false;
-      break;
-    default:
-      Serial.println("Invalid command");
-      forwardAxis.stop();
-      backwardAxis.stop();
-      isMovingForward = false;
-      break;
     }
+    else if (distance > goalDistance + TOLERANCE)
+    {
+      forwardAxis.moveForward(speed);
+      backwardAxis.moveForward(speed);
+    }
+    else
+    {
+      forwardAxis.stop();
+      backwardAxis.stop();
+    }
+    break;
+
+  case STOPPED:
+    forwardAxis.stop();
+    backwardAxis.stop();
+    Serial.println("STOP");
+    break;
   }
 }
