@@ -1,4 +1,3 @@
-// LibrerÃ­a para el ESP32
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
@@ -51,7 +50,7 @@ public:
     digitalWrite(IN2, LOW);
     digitalWrite(IN3, HIGH);
     digitalWrite(IN4, LOW);
-    setSpeed(speed);
+    setSpeed(speed, speed);
   }
 
   void moveBackward(int speed)
@@ -60,7 +59,7 @@ public:
     digitalWrite(IN2, HIGH);
     digitalWrite(IN3, LOW);
     digitalWrite(IN4, HIGH);
-    setSpeed(speed);
+    setSpeed(speed, speed);
   }
 
   void moveLeft(int speed)
@@ -69,7 +68,7 @@ public:
     digitalWrite(IN2, LOW);
     digitalWrite(IN3, LOW);
     digitalWrite(IN4, HIGH);
-    setSpeed(speed);
+    setSpeed(speed, speed);
   }
 
   void moveRight(int speed)
@@ -78,7 +77,43 @@ public:
     digitalWrite(IN2, HIGH);
     digitalWrite(IN3, HIGH);
     digitalWrite(IN4, LOW);
-    setSpeed(speed);
+    setSpeed(speed, speed);
+  }
+
+  void moveForwardLeft(int speed)
+  {
+    digitalWrite(IN1, HIGH);
+    digitalWrite(IN2, LOW);
+    digitalWrite(IN3, HIGH);
+    digitalWrite(IN4, LOW);
+    setSpeed(turnSpeed(speed), speed);
+  }
+
+  void moveForwardRight(int speed)
+  {
+    digitalWrite(IN1, HIGH);
+    digitalWrite(IN2, LOW);
+    digitalWrite(IN3, HIGH);
+    digitalWrite(IN4, LOW);
+    setSpeed(speed, turnSpeed(speed));
+  }
+
+  void moveBackwardLeft(int speed)
+  {
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, HIGH);
+    digitalWrite(IN3, LOW);
+    digitalWrite(IN4, HIGH);
+    setSpeed(turnSpeed(speed), speed);
+  }
+
+  void moveBackwardRight(int speed)
+  {
+    digitalWrite(IN1, LOW);
+    digitalWrite(IN2, HIGH);
+    digitalWrite(IN3, LOW);
+    digitalWrite(IN4, HIGH);
+    setSpeed(speed, turnSpeed(speed));
   }
 
   void stop()
@@ -87,13 +122,37 @@ public:
     digitalWrite(IN2, LOW);
     digitalWrite(IN3, LOW);
     digitalWrite(IN4, LOW);
-    setSpeed(0);
+    setSpeed(0, 0);
   }
 
-  void setSpeed(int speed)
+  int saturateSpeed(int speed)
   {
-    ledcWrite(ENA_CHANNEL, speed);
-    ledcWrite(ENB_CHANNEL, speed);
+    if (speed > 255)
+    {
+      return 255;
+    }
+    else if (speed < 0)
+    {
+      return 0;
+    }
+    else if (speed < 150)
+    {
+      return 150;
+    }
+    return speed;
+  }
+
+  void setSpeed(int leftSpeed, int rightSpeed)
+  {
+    leftSpeed = saturateSpeed(leftSpeed);
+    rightSpeed = saturateSpeed(rightSpeed);
+    ledcWrite(ENA_CHANNEL, leftSpeed);
+    ledcWrite(ENB_CHANNEL, rightSpeed);
+  }
+
+  int turnSpeed(int speed)
+  {
+    return speed * 0.7;
   }
 };
 
@@ -170,6 +229,94 @@ LaserSensor laserSensor;
 
 float distance = 0;
 
+void handleCommand(char command)
+{
+  static bool isMovingForward = false;
+  static int speed = 255;
+
+  // Handle speed command (percentage 0-100)
+  if (command >= '0' && command <= '9')
+  {
+    int percentage = command - '0';
+    percentage = percentage * 10;              // Convert single digit to percentage (0-90%)
+    speed = map(percentage, 0, 100, 150, 255); // Map 0-100% to 150-255 PWM range
+    Serial.print("Speed set to: ");
+    Serial.print(percentage);
+    Serial.println("%");
+    return;
+  }
+  else if (command == '!')
+  { // Special case for 100%
+    speed = 255;
+    Serial.println("Speed set to: 100%");
+    return;
+  }
+
+  char commandUpper = toupper(command);
+
+  switch (commandUpper)
+  {
+  case 'W':
+    distance = laserSensor.getDistance();
+    if (distance > 0 && distance <= 5)
+    {
+      Serial.println("Obstacle detected within 5cm, cannot move forward");
+      forwardAxis.stop();
+      backwardAxis.stop();
+    }
+    else
+    {
+      Serial.println("Moving forward");
+      forwardAxis.moveForward(speed);
+      backwardAxis.moveForward(speed);
+    }
+    break;
+  case 'S':
+    Serial.println("Moving backward");
+    forwardAxis.moveBackward(speed);
+    backwardAxis.moveBackward(speed);
+    break;
+  case 'A':
+    Serial.println("Moving left");
+    forwardAxis.moveLeft(speed);
+    backwardAxis.moveLeft(speed);
+    break;
+  case 'D':
+    Serial.println("Moving right");
+    forwardAxis.moveRight(speed);
+    backwardAxis.moveRight(speed);
+    break;
+  case 'Q':
+    Serial.println("Moving forward left");
+    forwardAxis.moveForwardLeft(speed);
+    backwardAxis.moveForwardLeft(speed);
+    break;
+  case 'E':
+    Serial.println("Moving forward right");
+    forwardAxis.moveForwardRight(speed);
+    backwardAxis.moveForwardRight(speed);
+    break;
+  case 'Z':
+    Serial.println("Moving backward left");
+    forwardAxis.moveBackwardLeft(speed);
+    backwardAxis.moveBackwardLeft(speed);
+    break;
+  case 'C':
+    Serial.println("Moving backward right");
+    forwardAxis.moveBackwardRight(speed);
+    backwardAxis.moveBackwardRight(speed);
+    break;
+  case 'X':
+  default:
+    Serial.println("Stopping");
+    Serial.write(command);
+    Serial.println();
+    forwardAxis.stop();
+    backwardAxis.stop();
+    break;
+  }
+}
+
 // BLE UUIDs
 #define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 #define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
@@ -207,7 +354,14 @@ class MyCallbacks : public BLECharacteristicCallbacks
     if (value.length() > 0)
     {
       char command = value[0];
-      handleCommand(command);
+
+      // If we have a second character, it's the speed value
+      if (value.length() > 1)
+      {
+        char speedChar = value[1];
+        // Handle speed first
+        handleCommand(speedChar);
+      }
     }
   }
 };
@@ -246,65 +400,6 @@ void setup()
     Serial.println("Failed to initialize laser sensor!");
     while (1)
       ;
-  }
-}
-
-void handleCommand(char command)
-{
-  static bool isMovingForward = false;
-  static int speed = 255;
-
-  command = toupper(command);
-
-  switch (command)
-  {
-  case 'W':
-    distance = laserSensor.getDistance();
-    if (distance > 0 && distance <= 5)
-    {
-      Serial.println("Obstacle detected within 5cm, cannot move forward");
-      forwardAxis.stop();
-      backwardAxis.stop();
-      isMovingForward = false;
-    }
-    else
-    {
-      Serial.println("No obstacle detected, moving forward");
-      forwardAxis.moveForward(speed);
-      backwardAxis.moveForward(speed);
-      isMovingForward = true;
-    }
-    break;
-  case 'S':
-    Serial.println("Moving backward");
-    forwardAxis.moveBackward(speed);
-    backwardAxis.moveBackward(speed);
-    isMovingForward = false;
-    break;
-  case 'A':
-    Serial.println("Moving left");
-    forwardAxis.moveLeft(speed);
-    backwardAxis.moveLeft(speed);
-    isMovingForward = false;
-    break;
-  case 'D':
-    Serial.println("Moving right");
-    forwardAxis.moveRight(speed);
-    backwardAxis.moveRight(speed);
-    isMovingForward = false;
-    break;
-  case 'X':
-    Serial.println("Stopping");
-    forwardAxis.stop();
-    backwardAxis.stop();
-    isMovingForward = false;
-    break;
-  default:
-    Serial.println("Invalid command");
-    forwardAxis.stop();
-    backwardAxis.stop();
-    isMovingForward = false;
-    break;
   }
 }
 
