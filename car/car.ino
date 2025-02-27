@@ -1,5 +1,8 @@
 // LibrerÃ­a para el ESP32
-#include <WiFi.h>
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <BLEUtils.h>
+#include <BLE2902.h>
 #include <Adafruit_VL53L0X.h>
 
 class AxisController
@@ -167,9 +170,75 @@ LaserSensor laserSensor;
 
 float distance = 0;
 
+// BLE UUIDs
+#define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
+#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
+
+BLEServer *pServer = NULL;
+BLECharacteristic *pCharacteristic = NULL;
+bool deviceConnected = false;
+bool oldDeviceConnected = false;
+
+// Callback for handling BLE connections
+class MyServerCallbacks : public BLEServerCallbacks
+{
+  void onConnect(BLEServer *pServer)
+  {
+    deviceConnected = true;
+    Serial.println("Device connected");
+  };
+
+  void onDisconnect(BLEServer *pServer)
+  {
+    deviceConnected = false;
+    Serial.println("Device disconnected");
+    // Stop the car when disconnected
+    forwardAxis.stop();
+    backwardAxis.stop();
+  }
+};
+
+// Callback for handling received commands
+class MyCallbacks : public BLECharacteristicCallbacks
+{
+  void onWrite(BLECharacteristic *pCharacteristic)
+  {
+    std::string value = pCharacteristic->getValue();
+    if (value.length() > 0)
+    {
+      char command = value[0];
+      handleCommand(command);
+    }
+  }
+};
+
 void setup()
 {
   Serial.begin(115200);
+
+  // Initialize BLE
+  BLEDevice::init("ESP32-Car");
+  pServer = BLEDevice::createServer();
+  pServer->setCallbacks(new MyServerCallbacks());
+
+  BLEService *pService = pServer->createService(SERVICE_UUID);
+  pCharacteristic = pService->createCharacteristic(
+      CHARACTERISTIC_UUID,
+      BLECharacteristic::PROPERTY_READ |
+          BLECharacteristic::PROPERTY_WRITE |
+          BLECharacteristic::PROPERTY_NOTIFY);
+
+  pCharacteristic->setCallbacks(new MyCallbacks());
+  pCharacteristic->addDescriptor(new BLE2902());
+  pService->start();
+
+  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+  pAdvertising->addServiceUUID(SERVICE_UUID);
+  pAdvertising->setScanResponse(true);
+  pAdvertising->setMinPreferred(0x06);
+  pAdvertising->setMinPreferred(0x12);
+  BLEDevice::startAdvertising();
+  Serial.println("BLE device ready to connect!");
 
   // Initialize laser sensor
   if (!laserSensor.begin())
@@ -178,17 +247,85 @@ void setup()
     while (1)
       ;
   }
+}
 
-  Serial.println("Waiting for command...");
-  Serial.println("Commands: 'W' (forward), 'S' (backward), 'A' (left), 'D' (right), 'X' (stop)");
+void handleCommand(char command)
+{
+  static bool isMovingForward = false;
+  static int speed = 255;
+
+  command = toupper(command);
+
+  switch (command)
+  {
+  case 'W':
+    distance = laserSensor.getDistance();
+    if (distance > 0 && distance <= 5)
+    {
+      Serial.println("Obstacle detected within 5cm, cannot move forward");
+      forwardAxis.stop();
+      backwardAxis.stop();
+      isMovingForward = false;
+    }
+    else
+    {
+      Serial.println("No obstacle detected, moving forward");
+      forwardAxis.moveForward(speed);
+      backwardAxis.moveForward(speed);
+      isMovingForward = true;
+    }
+    break;
+  case 'S':
+    Serial.println("Moving backward");
+    forwardAxis.moveBackward(speed);
+    backwardAxis.moveBackward(speed);
+    isMovingForward = false;
+    break;
+  case 'A':
+    Serial.println("Moving left");
+    forwardAxis.moveLeft(speed);
+    backwardAxis.moveLeft(speed);
+    isMovingForward = false;
+    break;
+  case 'D':
+    Serial.println("Moving right");
+    forwardAxis.moveRight(speed);
+    backwardAxis.moveRight(speed);
+    isMovingForward = false;
+    break;
+  case 'X':
+    Serial.println("Stopping");
+    forwardAxis.stop();
+    backwardAxis.stop();
+    isMovingForward = false;
+    break;
+  default:
+    Serial.println("Invalid command");
+    forwardAxis.stop();
+    backwardAxis.stop();
+    isMovingForward = false;
+    break;
+  }
 }
 
 void loop()
 {
-  // Continuously check distance if moving forward
   static bool isMovingForward = false;
-  static int speed = 255;
 
+  // Handle BLE connection events
+  if (!deviceConnected && oldDeviceConnected)
+  {
+    delay(500);                  // Give the bluetooth stack the chance to get things ready
+    pServer->startAdvertising(); // Restart advertising
+    oldDeviceConnected = deviceConnected;
+  }
+
+  if (deviceConnected && !oldDeviceConnected)
+  {
+    oldDeviceConnected = deviceConnected;
+  }
+
+  // Continuously check distance if moving forward
   if (isMovingForward)
   {
     distance = laserSensor.getDistance();
@@ -198,68 +335,6 @@ void loop()
       forwardAxis.stop();
       backwardAxis.stop();
       isMovingForward = false;
-    }
-  }
-
-  if (Serial.available() > 0)
-  {
-    char command = Serial.read();
-    command = toupper(command);
-
-    if (command == '\n' || command == '\r')
-    {
-      return;
-    }
-
-    switch (command)
-    {
-    case 'W':
-      distance = laserSensor.getDistance();
-      if (distance > 0 && distance <= 5)
-      {
-        Serial.println("Obstacle detected within 5cm, cannot move forward");
-        forwardAxis.stop();
-        backwardAxis.stop();
-        isMovingForward = false;
-      }
-      else
-      {
-        Serial.println("No obstacle detected, moving forward");
-        forwardAxis.moveForward(speed);
-        backwardAxis.moveForward(speed);
-        isMovingForward = true;
-      }
-      break;
-    case 'S':
-      Serial.println("Moving backward");
-      forwardAxis.moveBackward(speed);
-      backwardAxis.moveBackward(speed);
-      isMovingForward = false;
-      break;
-    case 'A':
-      Serial.println("Moving left");
-      forwardAxis.moveLeft(speed);
-      backwardAxis.moveLeft(speed);
-      isMovingForward = false;
-      break;
-    case 'D':
-      Serial.println("Moving right");
-      forwardAxis.moveRight(speed);
-      backwardAxis.moveRight(speed);
-      isMovingForward = false;
-      break;
-    case 'X':
-      Serial.println("Stopping");
-      forwardAxis.stop();
-      backwardAxis.stop();
-      isMovingForward = false;
-      break;
-    default:
-      Serial.println("Invalid command");
-      forwardAxis.stop();
-      backwardAxis.stop();
-      isMovingForward = false;
-      break;
     }
   }
 }
